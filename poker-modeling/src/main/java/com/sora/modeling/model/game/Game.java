@@ -1,10 +1,19 @@
 package com.sora.modeling.model.game;
 
+import com.google.common.collect.Lists;
 import com.sora.modeling.enums.Action;
+import com.sora.modeling.enums.Street;
+import com.sora.modeling.enums.Suit;
+import com.sora.modeling.model.card.Card;
 import com.sora.modeling.model.card.Hand;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static com.sora.modeling.enums.Street.*;
 
 /**
  * Created by yujingyi on 2019/4/10.
@@ -16,40 +25,91 @@ public class Game {
 
     private int bbPrice;
 
-    private LinkedList<PlayerAction> preFlop;
+    private Street currentStreet;
 
-    private LinkedList<PlayerAction> flop;
+    private Map<Integer, Hand> playerHands = new HashMap<>();
 
-    private LinkedList<PlayerAction> turn;
+    private Map<Street, LinkedList<PlayerAction>> actions = new HashMap<>();
 
-    private LinkedList<PlayerAction> river;
-
-    private void initBlindInPreFlop() {
-//        PlayerAction sbAction = new PlayerAction(0, Action.BET, sb, )
+    public Game(int playerNum) {
+        initStreet();
+        initPlayHands(playerNum);
     }
 
+    private void initStreet() {
+        actions.put(PRE_FLOP, Lists.newLinkedList());
+        actions.put(FLOP, Lists.newLinkedList());
+        actions.put(TURN, Lists.newLinkedList());
+        actions.put(RIVER, Lists.newLinkedList());
+        currentStreet = PRE_FLOP;
+    }
 
-    public static class PlayerHands {
-        private Hand sb;
+    private void initPlayHands(int playerNum) {
+        for (int i = 0; i < playerNum; ++i) {
+            Hand hand = new Hand();
+            hand.setPosition(i);
+            addPlayHand(i, hand);
+        }
+    }
 
-        private Hand bb;
+    private void initBlindInPreFlop() {
+        addAction(0, Action.BET, 1);
+        addAction(1, Action.BET, 2);
+    }
 
-        private Hand utg;
+    public void start() {
+        initBlindInPreFlop();
+    }
 
-        private Hand utgPlus1;
+    public void updatePlayHand(int position, Card[] cards, Integer original, Integer current) {
+        Hand hand = playerHands.get(position);
+        if (cards != null && cards.length > 0) {
+            hand.setCards(cards);
+        }
+        if (original != null) {
+            hand.setOriginalBBs(original);
+        }
+        if (current != null) {
+            hand.setCurrentBBs(current);
+        }
 
-        private Hand utgPlus2;
+    }
 
-        private Hand mp;
+    public void descPlayHandBBs(int position, int num) {
+        Hand hand = playerHands.get(position);
+        hand.descBBs(num);
+    }
 
-        private Hand mpPlus1;
+    public void addPlayHand(int position, Hand hand) {
+        playerHands.put(position, hand);
+    }
 
-        private Hand mpPlus2;
+    public void addAction(int position, Action action, int num) {
+        PlayerAction newAction = new PlayerAction(position, action, num);
+        LinkedList<PlayerAction> curStreetActionList = actions.get(currentStreet);
+        curStreetActionList.add(newAction);
+        descPlayHandBBs(position, num);
+    }
 
-        private Hand hj;
+    public String printGame() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Player Hands:\n");
+        for (Entry<Integer, Hand> entry : playerHands.entrySet()) {
+            builder.append("Postion: " + entry.getKey())
+                    .append(" hands: " + entry.getValue().cardsToString())
+                    .append(" left: " + entry.getValue().getCurrentBBs())
+                    .append("\n");
+        }
+        return builder.toString();
+    }
 
-        private Hand co;
-
-        private Hand btn;
+    public static void main(String[] args) {
+        Game game = new Game(7);
+        Card[] bbCards = {Card.builder().point(1).suit(Suit.CLUB).build(), Card.builder().point(1).suit(Suit.HEART).build()};
+        Card[] sbCards = {Card.builder().point(13).suit(Suit.CLUB).build(), Card.builder().point(13).suit(Suit.HEART).build()};
+        game.updatePlayHand(0, bbCards, 200, 200);
+        game.updatePlayHand(1, sbCards, 200, 200);
+        game.start();
+        System.out.println(game.printGame());
     }
 }

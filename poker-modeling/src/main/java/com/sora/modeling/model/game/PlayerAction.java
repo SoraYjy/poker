@@ -17,5 +17,4 @@ public class PlayerAction {
 
     private int put;
 
-    private int left;
 }

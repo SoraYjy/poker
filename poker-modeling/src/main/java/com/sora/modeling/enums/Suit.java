@@ -12,7 +12,8 @@ public enum Suit {
     SPADE("s"),
     HEART("h"),
     CLUB("c"),
-    DIAMOND("d");
+    DIAMOND("d"),
+    UNKNOWN("unknown");
 
     private String shortName;
 

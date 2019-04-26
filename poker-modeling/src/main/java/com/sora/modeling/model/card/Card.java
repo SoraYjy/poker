@@ -14,4 +14,16 @@ import lombok.Data;
 public class Card {
     private Suit suit;
     private int point;
+
+    public static Card unknowCard() {
+        return new Card(Suit.UNKNOWN, -1);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append(point > 0 ? point : "")
+                .append(suit.getShortName())
+                .toString();
+    }
 }

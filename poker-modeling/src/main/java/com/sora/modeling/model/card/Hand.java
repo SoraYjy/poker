@@ -8,10 +8,39 @@ import lombok.Data;
  */
 @Data
 public class Hand {
-    private Card[] hand;
+    private Card[] cards = {Card.unknowCard(), Card.unknowCard()};
 
     /**
      * from 0, sb, bb, utg... until btn
      */
-    private int position;
+    private int position = -1;
+
+    /**
+     * BBs before this game
+     */
+    private int originalBBs = 0;
+
+    /**
+     * BBs now
+     */
+    private int currentBBs = 0;
+
+    public void descBBs(int bbs) {
+        currentBBs -= bbs;
+    }
+
+    public String cardsToString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < cards.length; ++i) {
+            builder.append(cards[i].toString())
+                    .append(" ");
+
+        }
+        return builder.substring(0, builder.length() - 1);
+    }
+
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//    }
 }
