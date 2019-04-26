@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sora</groupId>
+        <artifactId>poker</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>poker-task</artifactId>
+    <packaging>jar</packaging>
+    <name>poker-task</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sora</groupId>
+            <artifactId>poker-common</artifactId>
+            <version>${bl.poker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sora</groupId>
+            <artifactId>poker-service</artifactId>
+            <version>${bl.poker.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>poker-task</finalName>
+    </build>
+</project>

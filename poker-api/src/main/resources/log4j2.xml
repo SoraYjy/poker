@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration status="info" monitorInterval="60">
+    <Properties>
+        <Property name="fileName">api.log</Property>
+        <Property name="backupFilePath">/data/logs/poker/api</Property>
+    </Properties>
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] %-5level %logger{36} %M %L - %msg%xEx%n"/>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="${backupFilePath}/${fileName}"
+                     filePattern="${backupFilePath}/api-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] %-5level %logger{36} %M %L - %msg%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+    </appenders>
+    <loggers>
+        <logger name="com.sora.poker.dao.main.mapper" level="trace" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <root level="info">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFile"/>
+        </root>
+    </loggers>
+</configuration>
